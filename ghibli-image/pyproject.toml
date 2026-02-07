@@ -1,0 +1,29 @@
+[project]
+name = "ghibli-image"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Ishan1012",email = "ishandwivedi1210@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "streamlit (>=1.54.0,<2.0.0)",
+    "torch (>=2.0.0,<3.0.0)",
+    "diffusers (>=0.27.0,<0.28.0)",
+    "peft (>=0.11.0,<0.12.0)",
+    "transformers (>=4.37.0,<4.38.0)",
+    "accelerate (>=0.27.0,<0.28.0)",
+    "huggingface-hub (==0.25.2)"
+]
+
+[tool.poetry]
+packages = [{include = "ghibli_image", from = "src"}]
+
+[tool.poetry.scripts]
+ghibli-ui = "scripts.streamlit_runner:main"
+ghibli-cli = "scripts.generate_cli:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
