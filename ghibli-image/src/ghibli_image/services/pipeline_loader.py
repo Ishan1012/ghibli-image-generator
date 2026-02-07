@@ -4,20 +4,22 @@ from diffusers import StableDiffusionPipeline
 from peft import PeftModel
 
 @st.cache_resource
-def load_pipeline(model_id: str, lora_path: str, device: str):
+def load_pipeline(model_id: str, lora_path: str):
+    device = "cpu"
     pipe = StableDiffusionPipeline.from_pretrained(
         model_id,
-        torch_dtype=torch.float16 if device == "cuda" else torch.float32,
+        torch_dtype=torch.float32,
         device_map=None,
-        low_cpu_mem_usage=False
+        low_cpu_mem_usage=True,
+        force_download=True
     )
 
     pipe.unet = PeftModel.from_pretrained(
         pipe.unet,
         lora_path,
-        is_trainable=False
+        is_trainable=False,
+        from_hf_hub=True
     )
 
-    pipe = pipe.to(device)
-
-    return pipe
+    pipe.enable_attention_slicing()
+    return pipe.to(device)
