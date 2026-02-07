@@ -3,7 +3,6 @@ from ghibli_image.services.image_generator import GhibliImageGenerator
 from ghibli_image.services.history_service import save_to_history
 
 def render_input():
-    generator = GhibliImageGenerator()
     st.markdown('<h2 class="section-title">Create Your Artwork</h2>', unsafe_allow_html=True)
 
     # Preset prompts section
@@ -46,6 +45,7 @@ def render_input():
         with st.spinner('Creating your masterpiece...'):
             try:
                 # Generate image (replace this with your actual model call)
+                generator = GhibliImageGenerator()
                 generated_image = generator.generate(user_prompt)
                 
                 # Save to history

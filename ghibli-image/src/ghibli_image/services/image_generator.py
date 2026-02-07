@@ -15,6 +15,8 @@ class GhibliImageGenerator:
         pipe = StableDiffusionPipeline.from_pretrained(
             self.model_id,
             torch_dtype=torch.float32,
+            device_map=None,
+            low_cpu_mem_usage=False
         )
 
         pipe.unet = PeftModel.from_pretrained(
