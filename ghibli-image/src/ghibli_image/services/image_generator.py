@@ -3,6 +3,7 @@ from diffusers import StableDiffusionPipeline
 from peft import PeftModel
 import os
 import streamlit as st
+from ghibli_image.services.pipeline_loader import load_pipeline
 
 class GhibliImageGenerator:
     def __init__(self):
@@ -10,28 +11,18 @@ class GhibliImageGenerator:
         self.lora_path = "./data/ghibli_model"
         # Use GPU on Streamlit Cloud if available
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.pipe = self._load_pipeline()
-
-    @st.cache_resource
-    def _load_pipeline(self):
-        pipe = StableDiffusionPipeline.from_pretrained(
+        self.pipe = load_pipeline(
             self.model_id,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
-            device_map="auto",
-            low_cpu_mem_usage=True
-        )
-
-        pipe.unet = PeftModel.from_pretrained(
-            pipe.unet,
             self.lora_path,
-            is_trainable=False
+            self.device
         )
-
-        pipe = pipe.to(self.device)
-        pipe.enable_attention_slicing()
-        return pipe
 
     def generate(self, prompt: str):
+        self.pipe.scheduler.set_timesteps(30)
+
+        generator = torch.Generator(device=self.device)
+        generator.manual_seed(torch.seed())
+
         with torch.no_grad():
             image = self.pipe(
                 prompt,
@@ -39,6 +30,6 @@ class GhibliImageGenerator:
                 guidance_scale=8.0,
                 height=384,
                 width=384,
-                generator=torch.Generator(device=self.device).manual_seed(42)
+                generator=generator
             ).images[0]
         return image

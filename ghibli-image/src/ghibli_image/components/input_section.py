@@ -1,6 +1,6 @@
 import streamlit as st
-from ghibli_image.services.image_generator import GhibliImageGenerator
 from ghibli_image.services.history_service import save_to_history
+from ghibli_image.services.generator_singleton import get_generator
 
 def render_input():
     st.markdown('<h2 class="section-title">Create Your Artwork</h2>', unsafe_allow_html=True)
@@ -9,10 +9,7 @@ def render_input():
     st.markdown("<p style='color: rgba(255, 255, 255, 0.7); font-size: 1rem; margin-top: 20px; margin-bottom: 10px;'><strong>Select a Model:</strong></p>", unsafe_allow_html=True)
 
     model_options = [
-        "Stable Diffusion v2.1",
-        "DALL-E 3",
-        "Midjourney",
-        "Custom Model"
+        "Segmind Fine-Tuned Model"
     ]
 
     selected_model = st.selectbox(
@@ -42,10 +39,10 @@ def render_input():
 
     # Handle generation
     if generate_btn and user_prompt:
-        with st.spinner('Creating your masterpiece...'):
+        with st.spinner('Generating Ghibli...'):
             try:
                 # Generate image (replace this with your actual model call)
-                generator = GhibliImageGenerator()
+                generator = get_generator()
                 generated_image = generator.generate(user_prompt)
                 
                 # Save to history
