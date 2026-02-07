@@ -2,21 +2,23 @@ import torch
 from diffusers import StableDiffusionPipeline
 from peft import PeftModel
 import os
+import streamlit as st
 
 class GhibliImageGenerator:
     def __init__(self):
         self.model_id = "segmind/tiny-sd"
         self.lora_path = "./data/ghibli_model"
-        self.device = "cpu"
+        # Use GPU on Streamlit Cloud if available
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.pipe = self._load_pipeline()
 
+    @st.cache_resource
     def _load_pipeline(self):
-
         pipe = StableDiffusionPipeline.from_pretrained(
             self.model_id,
-            torch_dtype=torch.float32,
-            device_map=None,
-            low_cpu_mem_usage=False
+            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+            device_map="auto",
+            low_cpu_mem_usage=True
         )
 
         pipe.unet = PeftModel.from_pretrained(
@@ -26,7 +28,6 @@ class GhibliImageGenerator:
         )
 
         pipe = pipe.to(self.device)
-
         pipe.enable_attention_slicing()
         return pipe
 

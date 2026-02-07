@@ -69,3 +69,28 @@ Model files are NOT committed to Git (.gitignore includes):
 - `final_model/` - LoRA weights
 
 These will be downloaded fresh on each deployment.
+
+# Streamlit Cloud Deployment Guide
+
+## Prerequisites
+- GitHub account with this repository
+- Streamlit Cloud account (https://streamlit.io/cloud)
+
+## Deployment Steps
+
+1. Push your code to GitHub
+2. Go to https://share.streamlit.io/
+3. Click "New app"
+4. Select your repository, branch, and main file (`src/ghibli_image/main.py`)
+5. Click "Deploy"
+
+## Important Notes
+
+- Model files in `data/` must be committed to GitHub (use Git LFS for large files)
+- Cold start times may be long due to model loading
+- Use `@st.cache_resource` for expensive operations
+- Streamlit Cloud has CPU-only instances by default (GPU requires paid tier)
+
+## Environment Setup
+
+The deployment uses `requirements.txt` automatically.
