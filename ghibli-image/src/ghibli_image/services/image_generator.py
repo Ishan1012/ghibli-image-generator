@@ -8,7 +8,7 @@ class GhibliImageGenerator:
 
         self.lora_path = os.path.join(
             os.path.dirname(__file__),
-            "../../data/ghibli_model"
+            "../../../data/ghibli_model"
         )
         self.lora_path = os.path.abspath(self.lora_path)
 
@@ -35,5 +35,5 @@ class GhibliImageGenerator:
                 width=384,
                 generator=generator
             ).images[0]
-            
+
         return image
