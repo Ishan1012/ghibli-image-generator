@@ -3,6 +3,9 @@ from ghibli_image.services.history_service import save_to_history
 from ghibli_image.services.generator_singleton import get_generator
 
 def render_input():
+    if "is_generating" not in st.session_state:
+        st.session_state.is_generating = False
+        
     st.markdown('<h2 class="section-title">Create Your Artwork</h2>', unsafe_allow_html=True)
 
     # Preset prompts section
@@ -44,7 +47,7 @@ def render_input():
     # Handle generation
     if generate_btn and user_prompt and not st.session_state.is_generating:
         st.session_state.is_generating = True
-        
+
         with st.spinner('Generating Ghibli...'):
             try:
                 # Generate image (replace this with your actual model call)
