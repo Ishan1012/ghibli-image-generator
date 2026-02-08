@@ -35,10 +35,16 @@ def render_input():
     # Generate button
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
     with col_btn2:
-        generate_btn = st.button("✨ Generate Artwork", use_container_width=True)
+        generate_btn = st.button(
+            "✨ Generate Artwork", 
+            use_container_width=True,
+            disabled=st.session_state.is_generating
+        )
 
     # Handle generation
-    if generate_btn and user_prompt:
+    if generate_btn and user_prompt and not st.session_state.is_generating:
+        st.session_state.is_generating = True
+        
         with st.spinner('Generating Ghibli...'):
             try:
                 # Generate image (replace this with your actual model call)
@@ -52,6 +58,9 @@ def render_input():
                 
             except Exception as e:
                 st.error(f"❌ Generation failed: {str(e)}")
+
+            finally:
+                st.session_state.is_generating = False
 
     elif generate_btn and not user_prompt:
         st.warning("⚠️ Please enter a prompt first!")
