@@ -1,7 +1,7 @@
 # Model cache - too large to commit
 model/
 segmind/
-
+hf_cache/
 # Python
 __pycache__/
 *.py[cod]

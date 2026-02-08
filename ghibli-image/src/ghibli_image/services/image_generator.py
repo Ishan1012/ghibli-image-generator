@@ -8,13 +8,13 @@ class GhibliImageGenerator:
         self.pipe = load_pipeline(self.model_id, self.lora_path)
 
     def generate(self, prompt: str):
-        self.pipe.scheduler.set_timesteps(20)
+        self.pipe.scheduler.set_timesteps(30)
 
         with torch.no_grad():
             image = self.pipe(
                 prompt,
-                num_inference_steps=20,
-                guidance_scale=7.5,
+                num_inference_steps=30,
+                guidance_scale=9,
                 height=256,
                 width=256
             ).images[0]
